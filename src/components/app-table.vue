@@ -4,16 +4,16 @@
       <thead>
         <tr>
           <th 
-            v-for="col in columns" 
-            :key="col.field" 
-            :class="{'table__th-with-sort': col.hasSort}" 
+            v-for="cell in columns" 
+            :key="cell.field" 
+            :class="{'table__th-with-sort': cell.hasSort}" 
             @click="sortById" >
-              {{ col.title }}
-              <ArrowsSvg v-if="col.hasSort"/>
+              {{ cell.title }}
+              <ArrowsSvg v-if="cell.hasSort"/>
               <input 
                 class="table__filter-field"
                 type="text"
-                v-if="col.hasFilter"
+                v-if="cell.hasFilter"
                 v-model="filterField"
                 @input="filterByName"
               >
@@ -22,14 +22,15 @@
       </thead>
       
       <tbody>
-        <tr v-for="row in getModifiedRows" :key="row.id">
-          <td 
-            v-for="(col, key, idx) in row"
-            :key="col.id"
-            :columnsField="columns[idx].field" >
-            {{col}}
-          </td>
-        </tr>
+        <template v-for="row in getModifiedRows" :key="row.id">
+          <tr>
+            <td v-for="(cell, key, idx) in row" :key="cell.id"> 
+              <slot :name="columns[idx].field" :value="cell">
+                {{cell}}
+              </slot>
+            </td>
+          </tr>
+        </template>
       </tbody>
     </table>
   </div>
